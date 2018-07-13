@@ -1,4 +1,4 @@
-package com.invertase.rnfirebasestarter;
+package com.acomertacna.acomertacna;
 
 import android.app.Application;
 
