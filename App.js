@@ -8,12 +8,14 @@ import Loading from './Loading'
 import SignUp from './SignUp'
 import Login from './Login'
 import Main from './Main'
+import RestaurantBox from './RestaurantBox'
 
 const App = SwitchNavigator(
   {
     Loading,
     SignUp,
     Login,
+    RestaurantBox,
     Main
   },
   {
