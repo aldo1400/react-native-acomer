@@ -1,7 +1,7 @@
 // SignUp.js
 
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
+import { StyleSheet, Text, TextInput, View, Button, Image } from 'react-native'
 import firebase from 'react-native-firebase'
 
 export default class SignUp extends React.Component {
@@ -18,8 +18,9 @@ handleSignUp = () => {
 
 render() {
     return (
+
       <View style={styles.container}>
-        <Text>Sign Up</Text>
+      <Image style={styles.image} source={require('./logo3.png')} />
         {this.state.errorMessage &&
           <Text style={{ color: 'red' }}>
             {this.state.errorMessage}
@@ -39,27 +40,36 @@ render() {
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
         />
-        <Button title="Sign Up" onPress={this.handleSignUp} />
+        <Button title="Registrarse" onPress={this.handleSignUp} />
         <Button
-          title="Already have an account? Login"
+          title="Ya tienes una cuenta? Ingresa"
           onPress={() => this.props.navigation.navigate('Login')}
         />
       </View>
+
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 20,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#BE3A1D',
   },
   textInput: {
     height: 40,
     width: '90%',
     borderColor: 'gray',
     borderWidth: 1,
-    marginTop: 8
+    backgroundColor: 'white',
+    marginTop: 20
+  },
+  image:{
+    width:150,
+    height:150,
+    borderRadius: 20,
   }
 })

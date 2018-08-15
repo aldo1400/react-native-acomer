@@ -1,79 +1,61 @@
-// Main.js
-
+//https://ionicframework.com/docs/ionicons/
 import React from 'react'
-import { StyleSheet, Platform, Image, Text, View ,Button,ListView,FlatList,TouchableOpacity} from 'react-native'
-import firebase from 'react-native-firebase'
-// import ItemComponent from './ItemComponent'
-// import RestauranteList from './RestauranteList'
-
+import { StyleSheet, Platform, Image, Text,
+  View ,ListView,FlatList,TouchableOpacity,TextInput} from 'react-native'
+  import { SearchBar,Button } from 'react-native-elements'
+import firebase from 'react-native-firebase';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Restaurante from './restaurante'
 const database = firebase.database();
-// let itemsRef = database.ref('/restaurante');
 
 
 export default class Main extends React.Component {
- 
-  state = { }
+
+  state = {
+
+  }
   constructor(props) {
     super(props);
     //realtime listener for firebase db
 
     this.itemsRef = database.ref('/restaurante');
-    this.state = { description: '', todos: [], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:''};
+    this.state = { description: '', todos: [], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:''};
   }
-  
+
 
   keyExtractor = (item) => item.id;
 
 handlePress(item){
-  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre});
+  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen});
 }
+
+
+
   renderItem = ({item}) => (
-    <TouchableOpacity onPress={()=>this.handlePress(item)}>
+
+    //aqui trabajamos
     <View style={styles.artistBox}>
-     {/* <Text style={styles.name}>{item.nombre}</Text> */}
-          <Image style={styles.image} source={{uri:item.imagen}}/>
-          
-          <View style={styles.info}>
-
-          <Text style={styles.name}>{item.nombre}</Text>
-          
-          <View style={styles.row}>
-          
-
-          <View style={styles.iconContainer}>
-          {/* <Icon name="ios-heart" size={30} color="black" /> */}
-          <Text style={styles.count}>{item.date}</Text>
-         </View>
-
-         <View style={styles.iconContainer}>
-          {/* <Icon name="ios-heart" size={30} color="black" /> */}
-          <Text style={styles.count}>{item.date}</Text>
-         </View>
-
-        <View >
-          {/* <Icon name="ios-heart" size={30} color="black" /> */}
-          <Text style={styles.count}>{item.email}</Text>
-         </View>
-         <Text style={styles.count}>{item.date}</Text>
-         <Text style={styles.count}>{item.likes}</Text>
-         {/* <View style={styles.iconContainer}>
-          <Icon name="ios-chatbubbles" size={30} color="black" />
-          <Text>{comments}</Text>
-          </View> */}
-
+        <Image style={styles.image} source={{uri:item.imagen}}/>
+        <View style={styles.info}>
+        <TouchableOpacity onPress={()=>this.handlePress(item)}>
+        <Text style={styles.name}>{item.nombre}</Text>
+        </TouchableOpacity>
+        <View style={styles.row}>
+          <View style={styles.iconcontenedor}>
+          <TouchableOpacity onPress={this.handlePressLike(likeIcon)}>
+          <Icon name="md-heart-outline" size={30} color="#e74c3c"/>
+          </TouchableOpacity>
+          <Text style={styles.count}>{item.likes}</Text>
           </View>
+          <View style={styles.iconcontenedor}>
+          <Icon name="ios-chatboxes-outline" size={30} color="gray"/>
+          <Text style={styles.count}>comment</Text>
           </View>
         </View>
-        </TouchableOpacity>
+        </View>
+    </View>
+
   )
-
-  
-
-  // <View >
-  //   <Text style={{fontSize: 20}}>{item.description}, {item.date}</Text>   
-  // </View>;
-
-
 handleLogout(){
   firebase
   .auth()
@@ -83,7 +65,7 @@ handleLogout(){
 
  // List todos
  listenForItems(itemsRef) {
-  itemsRef.on('value', (snap) => {
+  database.ref().child('restaurante').orderByChild('likeCount').on('value', (snap) => {
     var items = [];
     snap.forEach((child) => {
       items.push({
@@ -91,7 +73,7 @@ handleLogout(){
         description: child.val().description,
         email: child.val().email,
         imagen:child.val().imagen,
-        likes:child.val().likes,
+        likeCount:child.val().likeCount,
         horario:child.val().horario,
         nombre:child.val().nombre,
         date:child.val().date,
@@ -101,6 +83,41 @@ handleLogout(){
     this.setState({todos: items});
   });
 }
+
+firstSearch() {
+  this.searchDirectory(this.itemsRef);
+}
+
+searchDirectory(itemsRef) {
+
+  var searchText = this.state.searchText.toString();
+  
+  if (searchText == ""){
+    this.listenForItems(itemsRef);
+  }else{
+    // this.itemsRef.orderByChild("searchable").startAt(searchText).on('value', (snap) => {
+      database.ref().child('restaurante').orderByChild('nombre').equalTo(searchText).on('value', (snap) => {
+      items = [];
+      snap.forEach((child) => {
+        items.push({
+          id: child.key,
+          description: child.val().description,
+        email: child.val().email,
+        imagen:child.val().imagen,
+        likeCount:child.val().likeCount,
+        horario:child.val().horario,
+        nombre:child.val().nombre,
+        date:child.val().date,
+        });
+      });
+  
+      this.setState({todos: items});
+      // this.listenForItems(this.itemsRef);
+  
+    });
+  }
+  
+  }
 
 componentDidMount() {
   const { currentUser } = firebase.auth()
@@ -112,25 +129,32 @@ render() {
     const { currentUser } = this.state
 
 return (
-      <View style={styles.container}>
-      
-                    
-                   
-                    <FlatList
+        <View style={styles.container}>
+        <View style={styles.header}>
+          <Image style={styles.logo} source={require('./logo3.png')} />
+          <Text style={styles.usuario}>
+            Hi   {currentUser && currentUser.email}
+          </Text>
+
+          <TouchableOpacity onPress={this.handleLogout}>
+            <Icon name="md-power" size={30} color="white"/>
+            <Text style={styles.salir}>Salir</Text>
+          </TouchableOpacity>
+          </View>
+          <SearchBar
+          showLoading
+          platform="android"
+          returnKeyType='search'
+          onChangeText={(text)=>this.setState({searchText:text})}
+          onSubmitEditing={()=>this.firstSearch()}
+          cancelButtonTitle="Cancel"
+          placeholder='Busca tu Restaurante favorito' />
+            <FlatList
             data = {this.state.todos}
             keyExtractor = {this.keyExtractor}
-            renderItem = {this.renderItem}
-            
-            // style={{marginTop: 20}}
-            />
-                
-                    
-
-        <Text>
-          Hi   {currentUser && currentUser.email}!
-        </Text>
-        <Button title="Logout" onPress={this.handleLogout} />
-      </View>
+            renderItem={({item})=> <Restaurante item={item} editar={()=>{this.handlePress(item)}}/>}
+        />
+        </View>
     )
 
   }
@@ -138,44 +162,44 @@ return (
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center'
-  // },
-  image:{
-    width:100,
-    height:100
+  container: {
+    flex: 1,
+    paddingTop:20,
+    backgroundColor: 'white',
   },
-  artistBox:{
-    margin:5,
-    backgroundColor:'white',
-    flexDirection:'row',
-    elevation:2
+  header: {
+    height: 70,
+    backgroundColor: '#BE3A1D',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 2,
+    paddingHorizontal: 5,
+    marginBottom: 10,
   },
-  info:{
-    flex:1,
-    flexDirection:'column',
-    alignItems:'center',
-    justifyContent:'center'
+  inputContainer: {
+    height: 30,
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    borderRadius: 6,
   },
-  name:{
-    fontSize:20,
-    marginTop:10,
-    color:'#333'
+  input: {
+    height: 50,
+    flex: 1,
   },
-  row:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginHorizontal:40,
-    marginTop:15
+  logo:{
+    width:65,
+    height:65,
+    borderRadius:30,
   },
-  iconContainer:{
-    flex:1,
-    alignItems:'center'
+  usuario:{
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
-  count:{
-    color:'gray'
+  salir:{
+    color: 'white',
+    fontSize: 10,
   }
-
-})
+});
