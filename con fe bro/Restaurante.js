@@ -8,7 +8,6 @@ class Restaurante extends Component {
   state = {
     liked: false,
     likeCount: null,
-    commentCount: 0,
   }
 
   componentWillMount() {
@@ -21,6 +20,7 @@ class Restaurante extends Component {
 
   handleArtistOnValue = snapshot => {
     const userId = firebase.auth().currentUser.uid
+
     const artist = snapshot.val()
 
     if (!artist) {
@@ -63,17 +63,17 @@ class Restaurante extends Component {
     .then(() => this.busy = false)
   }
 
-
   getArtistRef() {
     const Id = this.props.item.id
+
     return database.ref(`restaurante/${Id}`)
   }
-
+//hasta q
 
   render() {
     const likeIcon  = this.state.liked ?
-   <Icon name="ios-heart" size={30} color="#e74c3c"/> :
-   <Icon name="ios-heart-outline" size={30} color="gray"/>
+   <Icon name="android-heart" size={30} color="#e74c3c"/> :
+   <Icon name="heart-outline" size={30} color="gray"/>
     return (
         <View style={styles.artistBox}>
             <Image style={styles.image} source={{uri:this.props.item.imagen}}/>
@@ -89,10 +89,8 @@ class Restaurante extends Component {
               <Text style={styles.count}>{this.props.item.likeCount}Me gusta</Text>
               </View>
               <View style={styles.iconcontenedor}>
-              <TouchableOpacity onPress={()=>{this.props.editar(this.props.item)}}>
               <Icon name="ios-chatboxes-outline" size={30} color="gray"/>
-              <Text style={styles.count}>Comentarios</Text>
-              </TouchableOpacity>
+              <Text style={styles.count}>comment</Text>
               </View>
             </View>
             </View>

@@ -2,17 +2,63 @@ import React from 'react'
 import { StyleSheet, Platform, Image, Text, View ,Button,
   TextInput,
   TouchableOpacity } from 'react-native';
+import {TabNavigator} from 'react-navigation';
 import firebase from 'react-native-firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
-export default class RestaurantBox extends React.Component {
-    render() {
+import CommentList from './componentes/commentlist';
+
+const database = firebase.database();
+class RestaurantBox extends React.Component {
+  state = {
+    comments: []
+  }
+
+  componentDidMount() {
+    this.getArtistCommentsRef().on('value', this.addComment);
+  }
+
+  componentWillUnmount(){
+    this.getArtistCommentsRef().off('value', this.addComment);
+  }
+
+  addComment = (data) => {
+    const comment = data.val()
+    this.setState({
+      comments: comment || []
+    })
+  }
+
+  handleSend = () => {
+    const { text } = this.state
+    const { uid} = firebase.auth().currentUser
+    const artistCommentsRef = this.getArtistCommentsRef()
+    const newCommentRef = artistCommentsRef.push();
+    newCommentRef.set({
+      text,
+      uid,
+    })
+    this.setState({ text: '' })
+  };
+
+  getArtistCommentsRef = () => {
+    const { navigation } = this.props;
+    const id = navigation.getParam('id','');
+    return database.ref(`comments/${id}`)
+  }
+
+  handleChangeText = (text) => this.setState({ text })
+
+render() {
         const { navigation } = this.props;
+        const Id = navigation.getParam('id','');
         const Name = navigation.getParam('nombre', '');
         const Horario = navigation.getParam('horario', '');
         const Email = navigation.getParam('email', '');
         const Imagen = navigation.getParam('imagen', '');
         const Names = JSON.stringify(Name);
         const Namese = Names.replace(/["']/g, "");
+
+        const { comments } = this.state;
         return (
      //a partir de aqui
      <View style={styles.container}>
@@ -44,11 +90,14 @@ export default class RestaurantBox extends React.Component {
          <Icon name="ios-pin" size={30} color="gray" />
          <Text style={styles.texto}>AV. Bolognesi Nº 345</Text>
         </View>
+        <CommentList comments={comments} />
        <View style={styles.inputContainer}>
-         <TextInput
-           style={styles.input}
-           placeholder="Opina sobre este restaurante"
-         />
+          <TextInput
+             style={styles.input}
+             placeholder="Opina sobre este restaurante"
+             onChangeText={this.handleChangeText}
+            value={this.state.text}
+           />
          <TouchableOpacity onPress={this.handleSend}>
            <Icon name="ios-send-outline" size={30} color="gray" />
          </TouchableOpacity>
@@ -57,6 +106,21 @@ export default class RestaurantBox extends React.Component {
         )
       }
 }
+
+// class Carta extends React.Component {
+//   render(){
+//     return(
+//       <View>
+//         <Text>aqui estaria la carta</Text>
+//       </View>
+//     )
+//   }
+// }
+// export default TabNavigator({
+//   home:{screen:RestaurantBox},
+//   setting:{screen:Carta},
+// });
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -127,3 +191,4 @@ const styles = StyleSheet.create({
     height:150,
   }
 });
+export default RestaurantBox;

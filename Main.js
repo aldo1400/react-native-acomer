@@ -1,10 +1,7 @@
-//https://ionicframework.com/docs/ionicons/
 import React from 'react'
 import { StyleSheet, Platform, Image, Text,
   View ,ListView,FlatList,TouchableOpacity,TextInput} from 'react-native'
-  import { SearchBar,Button } from 'react-native-elements'
 import firebase from 'react-native-firebase';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Search from './componentes/Search';
 import Header from './componentes/Header';
 import Restaurante from './Restaurante'
@@ -13,13 +10,8 @@ const database = firebase.database();
 
 export default class Main extends React.Component {
 
-  state = {
-
-  }
   constructor(props) {
     super(props);
-    //realtime listener for firebase db
-
     this.itemsRef = database.ref('/restaurante');
     this.state = { description: '', todos: [], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:''};
     this.cambiartexto=this.cambiartexto.bind(this);
