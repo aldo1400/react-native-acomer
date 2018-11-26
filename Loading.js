@@ -2,6 +2,18 @@
 
 import React from 'react'
 import { View, Text, ActivityIndicator, StyleSheet,ImageBackground,Image } from 'react-native'
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
+
 import firebase from 'react-native-firebase'
 
 // const remote = 'https://www.abc.es/media/sociedad/2016/11/09/prioridades-kfLC-U201260767731SE-620x500@abc.jpg';
@@ -11,8 +23,8 @@ export default class Loading extends React.Component {
    
    closeActivityIndicator =  () =>{
     setTimeout(() => this.setState({
-      animating: false }), 15000);
-    setTimeout(() => this.waitTime(), 15000);
+      animating: false }), 1000);
+    setTimeout(() => this.waitTime(), 1000);
    }
   
    waitTime(){
@@ -56,6 +68,26 @@ export default class Loading extends React.Component {
                              style = {styles.activityIndicator}
                
 />
+<DotIndicator color='#bc2b78' style={{
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 250,
+  bottom: 0,
+  alignItems: 'center',
+
+}}/>
+
+<BallIndicator color='#bc2b78' style={{
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 350,
+  bottom: 0,
+  alignItems: 'center',
+
+}}/>
+
 {/* <Text>Cargando ... </Text> */}
 <Text
           style={{

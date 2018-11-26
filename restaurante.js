@@ -73,7 +73,7 @@ class Restaurante extends Component {
   render() {
     const likeIcon  = this.state.liked ?
    <Icon name="ios-heart" size={30} color="#e74c3c"/> :
-   <Icon name="ios-heart-outline" size={30} color="gray"/>
+   <Icon name="ios-heart-empty" size={30} color="gray"/>
     return (
         <View style={styles.artistBox}>
             <Image style={styles.image} source={{uri:this.props.item.imagen}}/>
@@ -90,7 +90,7 @@ class Restaurante extends Component {
               </View>
               <View style={styles.iconcontenedor}>
               <TouchableOpacity onPress={()=>{this.props.editar(this.props.item)}}>
-              <Icon name="ios-chatboxes-outline" size={30} color="gray"/>
+              <Icon name="ios-chatboxes" size={30} color="gray"/>
               <Text style={styles.count}>Comentarios</Text>
               </TouchableOpacity>
               </View>

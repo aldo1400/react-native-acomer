@@ -24,7 +24,7 @@ export default class Header extends Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingTop:20,
+      paddingTop:0,
       backgroundColor: 'white',
     },
     header: {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       paddingTop: 2,
       paddingHorizontal: 5,
-      marginBottom: 10,
+      marginBottom: 0,
     },
     input: {
       height: 50,

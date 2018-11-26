@@ -4,9 +4,17 @@ import { StyleSheet, Platform, Image, Text,
 import firebase from 'react-native-firebase';
 import Search from './componentes/Search';
 import Header from './componentes/Header';
-import Restaurante from './Restaurante'
+import Restaurante from './Restaurante';
+import SliderRestaurante from './componentes/Slider';
+import {createDrawerNavigator} from 'react-navigation';
+import HomeScreen from './screens/HomeScreen';
+
+
 const database = firebase.database();
 
+const AppDrawerNavigator=createDrawerNavigator({
+  Home:HomeScreen
+})
 
 export default class Main extends React.Component {
 
@@ -17,6 +25,8 @@ export default class Main extends React.Component {
     this.cambiartexto=this.cambiartexto.bind(this);
     this.searchDirectory=this.searchDirectory.bind(this);
   }
+
+
 
 
   keyExtractor = (item) => item.id;
@@ -98,14 +108,18 @@ render() {
 
       return (
               <View style={styles.container}>
+                  <AppDrawerNavigator/>
                   <Header 
                     currentUser={currentUser}
                     handleLogout={this.handleLogout}
                   />
+                  
+                   <SliderRestaurante/>
                   <Search 
                     searchDirectory={this.searchDirectory}
                     cambiartexto={this.cambiartexto}
                   />
+                 
                   <FlatList
                     data = {this.state.todos}
                     keyExtractor = {this.keyExtractor}
@@ -121,7 +135,7 @@ render() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:20,
+    paddingTop:0,
     backgroundColor: 'white',
   },
   inputContainer: {

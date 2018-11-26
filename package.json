@@ -24,7 +24,11 @@
     "fbjs": "^0.8.16",
     "react": "^16.3.1",
     "react-native": "^0.55.3",
+    "react-native-elements": "^1.0.0-beta7",
     "react-native-firebase": "^4.1.0",
+    "react-native-indicators": "^0.13.0",
+    "react-native-swiper": "^1.5.13",
+    "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.6.2"
   }
 }

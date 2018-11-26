@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 
@@ -161,6 +162,8 @@ dependencies {
     implementation(project(':react-native-firebase')) {
         transitive = false
     }
+	
+	compile project(':react-native-vector-icons')
 
     // RNFirebase required dependencies
     implementation "com.google.firebase:firebase-core:15.0.2"
