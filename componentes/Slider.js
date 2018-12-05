@@ -8,7 +8,7 @@ import {
 
 import Swiper from 'react-native-swiper'
 
-const {width} = Dimensions.get('window')
+const {width,height} = Dimensions.get('window')
 
 const Slider = props => ( <View style={styles.container}>
         <Image style={styles.image} source={props.uri}/>
@@ -18,11 +18,12 @@ const Slider = props => ( <View style={styles.container}>
 const styles = {
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height:height
     },
     image: {
         flex: 1,
-        // heigth:'150',
+        height:height,
         width
     }
 }
@@ -33,22 +34,23 @@ export default class extends Component {
         
         this.state = {
             imagesSlider: [
-                require('../images/food.jpg'),
-                require('../images/1.jpg'),
+                require('../images/sl.jpg'),
+                require('../images/sl.jpg'),
                
-                require('../images/food.jpg')
+                require('../images/sl.jpg')
             ]
         }
     }
     render(){
         return (
-            <View style={{flex:1}}>
+            <View style={{flex:0.4}}>
+            
                 <Swiper
                     autoplay
                     height={150}
                     dotColor="white"
                     showsButtons="true"
-                    
+                    // dot={{}}
                 >
                 
                 {

@@ -34,12 +34,13 @@ class Restaurante extends Component {
   }
 
   handlePressLike = () => {
+    // console.log('Llamado');
     const { likeCount, liked } = this.state
 
     if (this.busy || likeCount === null || liked === null) {
-      return
+      return 
     }
-
+    // console.log('aaaaaaaaaaaaaah');
     this.busy = true
 
     const userId = firebase.auth().currentUser.uid
@@ -48,6 +49,7 @@ class Restaurante extends Component {
       if (artist) {
         if (artist.likes && artist.likes[userId]) {
           artist.likeCount--
+          console.log(artist.likeCount)
           artist.likes[userId] = null
         } else {
           artist.likeCount++
@@ -71,6 +73,7 @@ class Restaurante extends Component {
 
 
   render() {
+    console.log(this.state.liked)
     const likeIcon  = this.state.liked ?
    <Icon name="ios-heart" size={30} color="#e74c3c"/> :
    <Icon name="ios-heart-empty" size={30} color="gray"/>
@@ -113,11 +116,13 @@ artistBox:{
     height: 1,
     width: -2,
 
-  }
+  },
+  elevation:5
 },
 image: {
   width: 150,
   height: 150,
+  // borderRadius:20
 },
 info: {
   flex: 1,

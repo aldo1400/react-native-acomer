@@ -1,27 +1,26 @@
 import React from 'react'
 import { StyleSheet, Platform, Image, Text,
-  View ,ListView,FlatList,TouchableOpacity,TextInput} from 'react-native'
+  View ,ListView,FlatList,TouchableOpacity,TextInput,ScrollView} from 'react-native'
 import firebase from 'react-native-firebase';
 import Search from './componentes/Search';
 import Header from './componentes/Header';
 import Restaurante from './Restaurante';
 import SliderRestaurante from './componentes/Slider';
-import {createDrawerNavigator} from 'react-navigation';
-import HomeScreen from './screens/HomeScreen';
-
+import Categoria from './Categoria';
+import Top from './Top';
+import ListaCategorias from './componentes/ListaCategorias';
+import Test from './Test';
 
 const database = firebase.database();
 
-const AppDrawerNavigator=createDrawerNavigator({
-  Home:HomeScreen
-})
 
 export default class Main extends React.Component {
 
   constructor(props) {
     super(props);
     this.itemsRef = database.ref('/restaurante');
-    this.state = { description: '', todos: [], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:''};
+    this.itemsRef2 = database.ref('/tipoRestaurante');
+    this.state = { description: '', todos: [],tipos:[], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:''};
     this.cambiartexto=this.cambiartexto.bind(this);
     this.searchDirectory=this.searchDirectory.bind(this);
   }
@@ -32,7 +31,11 @@ export default class Main extends React.Component {
   keyExtractor = (item) => item.id;
 
 handlePress(item){
-  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen});
+  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen,id:item.id});
+}
+
+handlePressCategory(item){
+  this.props.navigation.navigate('CategoryBox',{nombre:item.nombre});
 }
 
 handleLogout(){
@@ -61,6 +64,23 @@ handleLogout(){
     items.reverse();
     this.setState({
       todos: items
+    });
+  });
+}
+
+listenForItems2(itemsRef2) {
+  database.ref().child('tipoRestaurante').orderByChild('nombre').on('value', (snap) => {
+    var items = [];
+    snap.forEach((child) => {
+      items.push({
+        id: child.key,
+        nombre: child.val().nombre,
+        imagen:child.val().imagen,
+      });
+    });
+    items.reverse();
+    this.setState({
+      tipos: items
     });
   });
 }
@@ -102,29 +122,63 @@ componentDidMount() {
   const { currentUser } = firebase.auth()
   this.setState({ currentUser })
   this.listenForItems(this.itemsRef);
+  this.listenForItems2(this.itemsRef2);
+  // console.log(this.state.tipos)
 }
 render() {
     const { currentUser } = this.state
 
       return (
               <View style={styles.container}>
-                  <AppDrawerNavigator/>
+                 
                   <Header 
                     currentUser={currentUser}
                     handleLogout={this.handleLogout}
                   />
-                  
+                  {/* <Text>hOLAAAAAAAAAA</Text> */}
                    <SliderRestaurante/>
                   <Search 
                     searchDirectory={this.searchDirectory}
                     cambiartexto={this.cambiartexto}
                   />
-                 
+                 <ScrollView
+        style={{height:350}}
+        showsVerticalScrollIndicator={false}
+        >
+<View>
+  <Text style={{marginLeft:10}}>Los más buscados!</Text>
+<FlatList
+horizontal
+ style={styles.lista}
+//  horizontal
+ data = {this.state.todos}
+ showsHorizontalScrollIndicator={false}
+ keyExtractor = {this.keyExtractor}
+ renderItem={({item})=> <Top item={item} editar={()=>{this.handlePress(item)}}/>}
+      />
+</View>
+<View>
+  <Text style={{marginLeft:10}}>Los más buscados!</Text>
+      <FlatList
+ style={styles.lista}
+ showsHorizontalScrollIndicator={false}
+ data = {this.state.tipos}
+ keyExtractor = {this.keyExtractor}
+ renderItem={({item})=> <Categoria item={item} editar2={()=>{this.handlePressCategory(item)}}/>}
+      />
+</View>
+<View>
+  <Text style={{marginLeft:10}}>Los más buscados!</Text>
                   <FlatList
+                  style={styles.lista}
                     data = {this.state.todos}
                     keyExtractor = {this.keyExtractor}
                     renderItem={({item})=> <Restaurante item={item} editar={()=>{this.handlePress(item)}}/>}
                   />
+</View>
+    </ScrollView>
+    
+                   {/* <AppDrawerNavigator/> */}
               </View>
           )
 
@@ -138,6 +192,11 @@ const styles = StyleSheet.create({
     paddingTop:0,
     backgroundColor: 'white',
   },
+  lista:{
+    marginTop:5,
+    marginBottom:5
+
+  },
   inputContainer: {
     height: 30,
     backgroundColor: 'white',
@@ -148,5 +207,6 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     flex: 1,
-  }
+  },
+  
 });

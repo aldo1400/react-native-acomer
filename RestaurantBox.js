@@ -2,10 +2,13 @@ import React from 'react'
 import { StyleSheet, Platform, Image, Text, View ,Button,
   TextInput,
   TouchableOpacity } from 'react-native';
-import {TabNavigator} from 'react-navigation';
+// import {TabNavigator} from 'react-navigation';
 import firebase from 'react-native-firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CommentList from './componentes/commentlist';
+
+import SliderRestaurante from './componentes/Slider';
+// import TabNavigator from './Test';
 
 const database = firebase.database();
 class RestaurantBox extends React.Component {
@@ -30,19 +33,30 @@ class RestaurantBox extends React.Component {
 
   handleSend = () => {
     const { text } = this.state
-    const { uid} = firebase.auth().currentUser
-    const artistCommentsRef = this.getArtistCommentsRef()
+    const { uid ,email} = firebase.auth().currentUser
+    const fecha_actual=new Date;
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+    const numberMonth=monthNames[fecha_actual.getMonth()];
+    const fecha_comentario=`${fecha_actual.getDate()} ${numberMonth}`;
+    // `Quince es ${a + b} y\nno ${2 * a + b}.`
+    const artistCommentsRef = this.getArtistCommentsRef();
     const newCommentRef = artistCommentsRef.push();
     newCommentRef.set({
       text,
       uid,
+      email,
+      fecha_comentario
     })
     this.setState({ text: '' })
   };
 
   getArtistCommentsRef = () => {
     const { navigation } = this.props;
+    // console.log(navigation);
     const id = navigation.getParam('id','');
+    console.log(id);
     return database.ref(`comments/${id}`)
   }
 
@@ -69,11 +83,14 @@ render() {
            </View>
          </TouchableOpacity>
          <Text style={styles.title}>{Namese}</Text>
+         
          <View style={styles.backButton} />
          </View>
-         <View style={styles.restaurantBox}>
-       <Image style={styles.image} source={require('./fondo.jpg')} />
-       </View>
+
+        
+        <SliderRestaurante/>
+         
+      
        <View style={styles.horarioContainer}>
        <Icon name="ios-timer" size={30} color="gray" />
        <Text style={styles.texto} >{JSON.stringify(Horario)}</Text>
@@ -90,7 +107,7 @@ render() {
          <Icon name="ios-pin" size={30} color="gray" />
          <Text style={styles.texto}>AV. Bolognesi Nº 345</Text>
         </View>
-        <CommentList comments={comments} />
+       
        <View style={styles.inputContainer}>
           <TextInput
              style={styles.input}
@@ -99,9 +116,12 @@ render() {
             value={this.state.text}
            />
          <TouchableOpacity onPress={this.handleSend}>
-           <Icon name="ios-send-outline" size={30} color="gray" />
+           <Icon name="ios-send" size={30} color="gray" />
          </TouchableOpacity>
        </View>
+       {/* <View style={styles.comentario}> */}
+       <CommentList comments={comments} />
+       {/* </View> */}
      </View>
         )
       }
@@ -124,7 +144,7 @@ render() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:20,
+    // paddingTop:20,
     backgroundColor: '#EFF4F7',
   },
   restaurantBox:{
@@ -147,7 +167,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 15,
     paddingHorizontal: 5,
-    marginBottom: 10,
+    // marginBottom: 10,
+    
   },
   inputContainer: {
     marginTop:10,
@@ -174,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 5,
     paddingTop: 10,
     width: 40,
-    marginRight: 5,
+    // marginRight: 25,
   },
   input: {
     height: 50,
@@ -189,6 +210,9 @@ const styles = StyleSheet.create({
   image:{
     width:361,
     height:150,
+  },
+  comentario:{
+    height:350
   }
 });
 export default RestaurantBox;

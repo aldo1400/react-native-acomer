@@ -9,6 +9,9 @@ import SignUp from './SignUp'
 import Login from './Login'
 import Main from './Main'
 import RestaurantBox from './RestaurantBox'
+import Platos from './Platos';
+import Test from './Test';
+import CategoryBox from './CategoryBox';
 
 const App = SwitchNavigator(
   {
@@ -16,7 +19,10 @@ const App = SwitchNavigator(
     SignUp,
     Login,
     RestaurantBox,
-    Main
+    Main,
+    Test,
+    Platos,
+    CategoryBox
   },
   {
     initialRouteName: 'Loading'
