@@ -50,7 +50,7 @@ export default class Loading extends React.Component {
       style={{
                  backgroundColor: '#ccc',
                    flex: 1,
-                   resizeMode,
+                  //  resizeMode,
                    position: 'absolute',
                    width: '100%',
                    height: '100%',

@@ -12,23 +12,88 @@ import RestaurantBox from './RestaurantBox'
 import Platos from './Platos';
 import Test from './Test';
 import CategoryBox from './CategoryBox';
+import Categoria from './Categoria';
+import Favorite from './Favorite';
+import test1 from './test1';
+import Profile from './Profile';
+// import React from 'react';
 
-const App = SwitchNavigator(
-  {
-    Loading,
-    SignUp,
-    Login,
-    RestaurantBox,
-    Main,
-    Test,
-    Platos,
-    CategoryBox
-  },
-  {
-    initialRouteName: 'Loading'
+
+// import React from 'react';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+// import MemoryScreen from './Memory';
+// import CPUScreen from './CPU';
+
+
+// const CPUScreen=
+
+const SettingsTabs = createBottomTabNavigator({
+    CPU: {
+        screen: test1,
+        navigationOptions: {
+            title: "Inicio",
+            tabBarIcon: ({ tintColor }) => (
+                <Icon
+                    name="home"
+                    size={17}
+                    color={tintColor} />
+            )
+        }
+    },
+    Favorite: {
+        screen: Favorite,
+        navigationOptions: {
+            tabBarLabel: "Favoritos",
+            tabBarIcon: ({ tintColor }) => (
+                <Icon
+                    name="heart"
+                    size={17}
+                    color={tintColor} />
+            )
+        }
+    },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+          tabBarLabel: "Perfil",
+          tabBarIcon: ({ tintColor }) => (
+              <Icon
+                  name="user-circle"
+                  size={17}
+                  color={tintColor} />
+          )
+      }
   }
-)
-export default App
+
+});
+
+//Issue: the tab navigator needs to be wrapped inside a stack navigator
+export default createStackNavigator({ SettingsTabs }, { headerMode: "none" });
+
+
+// const App = SwitchNavigator(
+//   {
+//     Loading,
+//     SignUp,
+//     Login,
+//     RestaurantBox,
+//     Main,
+//     Test,
+//     Platos,
+//     CategoryBox,
+//     Categoria
+//   },
+//   {
+//     initialRouteName: 'Loading'
+//   }
+// )
+
+
+
+// export default App
+
+
 // export default class App extends React.Component {
 //   constructor() {
 //     super();

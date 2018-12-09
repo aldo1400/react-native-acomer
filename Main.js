@@ -10,9 +10,9 @@ import Categoria from './Categoria';
 import Top from './Top';
 import ListaCategorias from './componentes/ListaCategorias';
 import Test from './Test';
+import Platos from './Platos';
 
 const database = firebase.database();
-
 
 export default class Main extends React.Component {
 
@@ -20,7 +20,7 @@ export default class Main extends React.Component {
     super(props);
     this.itemsRef = database.ref('/restaurante');
     this.itemsRef2 = database.ref('/tipoRestaurante');
-    this.state = { description: '', todos: [],tipos:[], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:''};
+    this.state = { description: '', todos: [],tipos:[], date: '', currentUser: null ,items: [],email:'',horario:'',imagen:'',horario:'',nombre:'',likes:'',searchText:'',pagina_web:''};
     this.cambiartexto=this.cambiartexto.bind(this);
     this.searchDirectory=this.searchDirectory.bind(this);
   }
@@ -31,11 +31,15 @@ export default class Main extends React.Component {
   keyExtractor = (item) => item.id;
 
 handlePress(item){
-  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen,id:item.id});
+  this.props.navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen,id:item.id,pagina_web:item.pagina_web});
 }
 
 handlePressCategory(item){
   this.props.navigation.navigate('CategoryBox',{nombre:item.nombre});
+}
+
+verPlatos(item){
+  this.props.navigation.navigate('Platos',{nombre:item.id});
 }
 
 handleLogout(){
@@ -59,6 +63,7 @@ handleLogout(){
         horario:child.val().horario,
         nombre:child.val().nombre,
         date:child.val().date,
+        pagina_web:child.val().pagina_web
       });
     });
     items.reverse();
@@ -136,11 +141,12 @@ render() {
                     handleLogout={this.handleLogout}
                   />
                   {/* <Text>hOLAAAAAAAAAA</Text> */}
-                   <SliderRestaurante/>
+                   {/* <SliderRestaurante/> */}
                   <Search 
                     searchDirectory={this.searchDirectory}
                     cambiartexto={this.cambiartexto}
                   />
+                  
                  <ScrollView
         style={{height:350}}
         showsVerticalScrollIndicator={false}
@@ -173,13 +179,15 @@ horizontal
                   style={styles.lista}
                     data = {this.state.todos}
                     keyExtractor = {this.keyExtractor}
-                    renderItem={({item})=> <Restaurante item={item} editar={()=>{this.handlePress(item)}}/>}
+                    renderItem={({item})=> <Restaurante item={item} editar={()=>{this.handlePress(item)}} verPlatos={()=>{this.verPlatos(item)}}/>}
                   />
 </View>
     </ScrollView>
     
                    {/* <AppDrawerNavigator/> */}
+                   {/* <Test></Test> */}
               </View>
+              
           )
 
   }

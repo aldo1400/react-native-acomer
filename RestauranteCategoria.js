@@ -11,7 +11,7 @@ export default class RestauranteCategoria extends Component {
         
        < View style={styles.containerCategory}>
         {/* <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={()=>{this.props.editar2(this.props.item)}}> */}
-          <Image source={{uri:this.props.item.imagen}} style={{height:150}}/>
+          <Image source={{uri:this.props.item.imagen_fondo}} style={{height:150}} />
               <Text style={styles.textoverlay}>{this.props.item.nombre}</Text>
       {/* </TouchableOpacity> */}
         </View>
@@ -22,7 +22,7 @@ export default class RestauranteCategoria extends Component {
 
 const styles = StyleSheet.create({
     containerCategory:{
-        elevation:3,
+        elevation:5,
         marginBottom:5,
         marginTop:3
     },

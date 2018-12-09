@@ -8,6 +8,7 @@ export default class Categoria extends Component {
   render() {
     return (
       <View style={styles.containerCategory}>
+      {/* <Text>{this.props.item.descripcion}</Text> */}
       <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={()=>{this.props.editar2(this.props.item)}}>
         <Image source={{uri:this.props.item.imagen}} style={{height:150}}/>
             <Text style={styles.textoverlay}>{this.props.item.nombre}</Text>

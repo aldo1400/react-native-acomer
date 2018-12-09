@@ -1,7 +1,9 @@
 import React from 'react'
 import { StyleSheet, Platform, Image, Text, View ,Button,
   TextInput,
-  TouchableOpacity } from 'react-native';
+  TouchableOpacity ,
+Linking
+} from 'react-native';
 // import {TabNavigator} from 'react-navigation';
 import firebase from 'react-native-firebase';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -30,6 +32,20 @@ class RestaurantBox extends React.Component {
       comments: comment || []
     })
   }
+  handleClick = () => {
+    const { navigation } = this.props;
+    const web = navigation.getParam('pagina_web', '');
+    // Linking.openURL('');
+    Linking.canOpenURL(`whatsapp://send?text=hello&phone=+51931245655`).then(supported => {
+      if (supported) {
+        Linking.openURL(`whatsapp://send?text=hellofromacomertacna&phone=+51929112431`);
+      } else {
+        console.log("Don't know how to open URI: " + web);
+      }
+    });
+  };
+
+  // const url = 
 
   handleSend = () => {
     const { text } = this.state
@@ -60,15 +76,30 @@ class RestaurantBox extends React.Component {
     return database.ref(`comments/${id}`)
   }
 
+  // handleClick = () => {
+  //   const { navigation } = this.props;
+  //   const Id = navigation.getParam('pagina_web','');
+  //   Linking.canOpenURL(this.props.url).then(supported => {
+  //     if (supported) {
+  //       Linking.openURL(this.props.url);
+  //     } else {
+  //       console.log("Don't know how to open URI: " + this.props.url);
+  //     }
+  //   });
+  // };
+
+
   handleChangeText = (text) => this.setState({ text })
 
 render() {
         const { navigation } = this.props;
+        console.log(navigation);
         const Id = navigation.getParam('id','');
         const Name = navigation.getParam('nombre', '');
         const Horario = navigation.getParam('horario', '');
         const Email = navigation.getParam('email', '');
         const Imagen = navigation.getParam('imagen', '');
+        const web = navigation.getParam('pagina_web', '');
         const Names = JSON.stringify(Name);
         const Namese = Names.replace(/["']/g, "");
 
@@ -88,7 +119,7 @@ render() {
          </View>
 
         
-        <SliderRestaurante/>
+        {/* <SliderRestaurante/> */}
          
       
        <View style={styles.horarioContainer}>
@@ -107,7 +138,14 @@ render() {
          <Icon name="ios-pin" size={30} color="gray" />
          <Text style={styles.texto}>AV. Bolognesi Nº 345</Text>
         </View>
-       
+
+        <TouchableOpacity onPress={this.handleClick}>
+     
+        <View style={styles.button}>
+          <Text style={styles.text}>Open {web}</Text>
+        </View>
+        
+      </TouchableOpacity>
        <View style={styles.inputContainer}>
           <TextInput
              style={styles.input}

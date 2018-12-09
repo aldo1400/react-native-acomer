@@ -49,7 +49,7 @@ export default class extends Component {
                     autoplay
                     height={150}
                     dotColor="white"
-                    showsButtons="true"
+                    showsButtons={true}
                     // dot={{}}
                 >
                 

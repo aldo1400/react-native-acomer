@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View ,FlatList} from 'react-native'
+import { Text, View ,FlatList,StyleSheet,TouchableOpacity} from 'react-native'
 import firebase from 'react-native-firebase'
 import Restaurante from './Restaurante'
 import RestauranteCategoria from './RestauranteCategoria'
 import Header from './componentes/Header';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const database = firebase.database();
 
@@ -12,7 +13,7 @@ export default class CategoryBox extends Component {
     state={
         todos:[]
     }
-    
+    keyExtractor = (item) => item.id;
     componentDidMount(){
         const { navigation } = this.props;
     const Name = navigation.getParam('nombre', '');
@@ -34,6 +35,7 @@ export default class CategoryBox extends Component {
                             horario:child.val().horario,
                             nombre:child.val().nombre,
                             date:child.val().date,
+                            imagen_fondo:child.val().imagen_fondo
                           });
                     }
                   
@@ -80,11 +82,17 @@ export default class CategoryBox extends Component {
     return (
       <View>
         
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Main')}>
+           <View style={styles.backButton}>
+             <Icon name="ios-arrow-round-back" size={32} />
+           </View>
+         </TouchableOpacity>
         <Header 
                     currentUser={currentUser}
                     handleLogout={this.handleLogout}
                   />
                   <Text> {Name} </Text>
+
      <FlatList
                 //   style={styles.lista}
                     data = {this.state.todos}
@@ -95,3 +103,12 @@ export default class CategoryBox extends Component {
     )
   }
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+      // flex: 1,
+      // paddingTop:20,
+      // backgroundColor: '#EFF4F7',
+    }
+  })

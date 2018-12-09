@@ -99,6 +99,10 @@ class Restaurante extends Component {
               </View>
             </View>
             </View>
+            <TouchableOpacity style={{position:'absolute',left:310,top:70}} onPress={()=>{this.props.verPlatos(this.props.item)}}>
+              <Icon name="ios-pizza" size={30} color="gray"/>
+              <Text style={styles.count}>Platos</Text>
+              </TouchableOpacity>
         </View>
 
     )
