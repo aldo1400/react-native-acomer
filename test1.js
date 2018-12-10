@@ -12,7 +12,8 @@ import Platos from './Platos';
 import Test from './Test';
 import CategoryBox from './CategoryBox';
 import Categoria from './Categoria';
-
+import RestauranteCategoria from './RestauranteCategoria'
+import Favorite from './Favorite'
 
 const App = SwitchNavigator(
     {
@@ -24,7 +25,9 @@ const App = SwitchNavigator(
       Test,
       Platos,
       CategoryBox,
-      Categoria
+      Categoria,
+      RestauranteCategoria,
+      // Favorite
     },
     {
       initialRouteName: 'Loading'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Platform, Image, Text, View ,Button,
   TextInput,
-  TouchableOpacity ,
+  TouchableOpacity ,ScrollView,Dimensions,
 Linking
 } from 'react-native';
 // import {TabNavigator} from 'react-navigation';
@@ -13,13 +13,18 @@ import SliderRestaurante from './componentes/Slider';
 // import TabNavigator from './Test';
 
 const database = firebase.database();
+const {width,height}=Dimensions.get('window');
+
 class RestaurantBox extends React.Component {
   state = {
-    comments: []
+    comments: [],
+    item:{}
   }
 
   componentDidMount() {
+    this.search();
     this.getArtistCommentsRef().on('value', this.addComment);
+    
   }
 
   componentWillUnmount(){
@@ -76,6 +81,7 @@ class RestaurantBox extends React.Component {
     return database.ref(`comments/${id}`)
   }
 
+
   // handleClick = () => {
   //   const { navigation } = this.props;
   //   const Id = navigation.getParam('pagina_web','');
@@ -87,33 +93,62 @@ class RestaurantBox extends React.Component {
   //     }
   //   });
   // };
-
+  search(){
+    const { navigation } = this.props;
+    const Id = navigation.getParam('id','');
+        const Name = navigation.getParam('nombre', '');
+var restaurante_detalle;
+    database.ref().child('restaurante').orderByChild('nombre').equalTo(Name).on('value', (snap) => {
+      // items = [];
+      
+      snap.forEach((child) => {
+        
+        restaurante_detalle={
+          id: child.key,
+          // description: child.val().description,
+        email: child.val().email,
+        imagen:child.val().imagen,
+        likeCount:child.val().likeCount,
+        horario:child.val().horario,
+        nombre:child.val().nombre,
+        date:child.val().date,
+        telefono:child.val().telefono,
+        imagen_fondo:child.val().imagen_fondo,
+        direccion:child.val().Direccion,
+        nombre_tipo:child.val().tipo_restaurante.nombre,
+        descripcion:child.val().descripcion
+        }
+        console.log(restaurante_detalle)
+        
+      });
+      this.setState({
+        item:restaurante_detalle
+      })
+    });
+    
+    console.log(this.state.item.nombre)
+    // console.log(restaurante_detalle);
+  }
 
   handleChangeText = (text) => this.setState({ text })
 
 render() {
         const { navigation } = this.props;
-        console.log(navigation);
-        const Id = navigation.getParam('id','');
-        const Name = navigation.getParam('nombre', '');
-        const Horario = navigation.getParam('horario', '');
-        const Email = navigation.getParam('email', '');
-        const Imagen = navigation.getParam('imagen', '');
         const web = navigation.getParam('pagina_web', '');
-        const Names = JSON.stringify(Name);
-        const Namese = Names.replace(/["']/g, "");
-
         const { comments } = this.state;
+
+        
         return (
      //a partir de aqui
      <View style={styles.container}>
        <View style={styles.header}>
          <TouchableOpacity onPress={() => this.props.navigation.navigate('Main')}>
            <View style={styles.backButton}>
-             <Icon name="ios-arrow-round-back" size={32} />
+             <Icon name="ios-arrow-dropleft-circle" size={32} color='white' />
            </View>
          </TouchableOpacity>
-         <Text style={styles.title}>{Namese}</Text>
+         <Text style={styles.title}>{this.state.item.nombre}
+         </Text>
          
          <View style={styles.backButton} />
          </View>
@@ -121,28 +156,51 @@ render() {
         
         {/* <SliderRestaurante/> */}
          
-      
+          <Image source={{uri:this.state.item.imagen_fondo}} style={styles.fondo}  />
+
+          <ScrollView
+        style={{height:350}}
+        showsVerticalScrollIndicator={false}
+        >
+         <View style={styles.horarioContainer2}>
+         
+         <Text style={styles.texto2}>{this.state.item.descripcion}</Text>
+        </View>
+
+        <Text>Detalles</Text>
+        {/* <View style={{marginTop:5,flexDirection:'row',width:300}}> */}
        <View style={styles.horarioContainer}>
        <Icon name="ios-timer" size={30} color="gray" />
-       <Text style={styles.texto} >{JSON.stringify(Horario)}</Text>
+       <Text style={styles.texto} >{this.state.item.horario}</Text>
        </View>
        <View style={styles.horarioContainer}>
        <Icon name="ios-mail" size={30} color="gray" />
-       <Text style={styles.texto} >{JSON.stringify(Email)}</Text>
+       <Text style={styles.texto} >{this.state.item.email}</Text>
        </View>
+       
+       {/* </View> */}
+
        <View style={styles.horarioContainer}>
          <Icon name="ios-call" size={30} color="green" />
-         <Text style={styles.texto} >953553629</Text>
+         <Text style={styles.texto} >{this.state.item.telefono}</Text>
         </View>
         <View style={styles.horarioContainer}>
          <Icon name="ios-pin" size={30} color="gray" />
-         <Text style={styles.texto}>AV. Bolognesi Nº 345</Text>
+         <Text style={styles.texto}>{this.state.item.direccion}</Text>
         </View>
+        <View style={styles.horarioContainer}>
+         
+         <Icon name="ios-restaurant" size={30} color="red" />
+         <Text style={styles.texto}>{this.state.item.nombre_tipo}</Text>
+        </View>
+       
+        
 
         <TouchableOpacity onPress={this.handleClick}>
      
         <View style={styles.button}>
-          <Text style={styles.text}>Open {web}</Text>
+          <Text style={styles.text}>{web}</Text>
+          
         </View>
         
       </TouchableOpacity>
@@ -157,33 +215,25 @@ render() {
            <Icon name="ios-send" size={30} color="gray" />
          </TouchableOpacity>
        </View>
-       {/* <View style={styles.comentario}> */}
+       
        <CommentList comments={comments} />
-       {/* </View> */}
+       </ScrollView>
      </View>
         )
       }
 }
-
-// class Carta extends React.Component {
-//   render(){
-//     return(
-//       <View>
-//         <Text>aqui estaria la carta</Text>
-//       </View>
-//     )
-//   }
-// }
-// export default TabNavigator({
-//   home:{screen:RestaurantBox},
-//   setting:{screen:Carta},
-// });
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     // paddingTop:20,
     backgroundColor: '#EFF4F7',
+  },
+  fondo:{
+    height:180,
+    opacity:0.8
+    // position:'absolute',
+    // width:null
   },
   restaurantBox:{
     margin: 5,
@@ -198,13 +248,17 @@ const styles = StyleSheet.create({
     }
   },
   header: {
-    height: 70,
-    backgroundColor: '#BE3A1D',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 15,
+    height: 50,
+    backgroundColor: 'transparent',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
+    paddingTop: 5,
     paddingHorizontal: 5,
+    // opacity:0.9,
+    position:'absolute',
+    width:width,
+    zIndex:99
     // marginBottom: 10,
     
   },
@@ -218,20 +272,30 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   horarioContainer:{
-    height: 50,
+    height: 40,
     backgroundColor: 'white',
     flexDirection: 'row',
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+  },
+  horarioContainer2:{
+    height: 80,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    paddingHorizontal: 15,
     alignItems: 'center',
   },
   title: {
     fontSize: 25,
     textAlign: 'center',
-    color: 'white',
+    position:'absolute',
+    left:width/2-50,
+    top:10,
+    color: 'white'
   },
   backButton: {
     padding: 5,
-    paddingTop: 10,
+    paddingTop: 5,
     width: 40,
     // marginRight: 25,
   },
@@ -241,6 +305,12 @@ const styles = StyleSheet.create({
   },
   texto:{
     height: 20,
+    flex:1,
+    paddingHorizontal: 40,
+    fontSize: 15,
+  },
+  texto2:{
+    height: 50,
     flex:1,
     paddingHorizontal: 40,
     fontSize: 15,

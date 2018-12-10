@@ -5,8 +5,8 @@ export default class PlatosBox extends Component {
   render() {
     return (
       <View style={styles.ContainerBox}>
-        <Image source={{uri:this.props.item.imagen}} style={{height:null,width:null}} />
-        <Image source={{uri:this.props.item.imagen}} style={{height:150}} />
+        {/* <Image source={{uri:this.props.item.imagen}} style={{height:null,width:null}} /> */}
+        <Image source={{uri:this.props.item.imagen}} style={{height:150,width:250}} />
         <View style={styles.nombre}>
         <Text> {this.props.item.nombre}</Text> 
         

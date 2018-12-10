@@ -1,15 +1,43 @@
 import React, { Component } from 'react'
 import { Text, View ,FlatList,StyleSheet,TouchableOpacity} from 'react-native'
 import firebase from 'react-native-firebase'
+import {SearchBar} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons'
 import PlatosBox from './PlatosBox'
+
 const database = firebase.database();
 
 export default class Platos extends Component {
   
   state={
-    platos:[]
+    platos:[],
+    text:''
   }
+
+  buscar(text){
+    this.setState({
+      text
+    });
+    console.log(text);
+    let productos=[...this.state.productos];
+    let busqueda=this.state.text;
+    let resultado;
+    
+    if(busqueda!==''){
+      resultado=productos.filter(producto=>(
+          producto.nombre.toLowerCase().indexOf(busqueda.toLowerCase())!==-1
+      ))
+    }
+    else{
+     resultado=productos;
+    }
+   
+  }
+
+  searchDirectory(){
+
+  }
+  
 
   keyExtractor = (item) => item.id;
 
@@ -75,10 +103,19 @@ console.log(Id_restaurante);
            </View>
          </TouchableOpacity>
 
+         <SearchBar
+            // showLoading
+            lightTheme
+            platform="android"
+            returnKeyType='search'
+            onChangeText={(text)=>this.buscar(text)}
+            onSubmitEditing={()=>this.searchDirectory()}
+            cancelButtonTitle="Cancel"
+            placeholder='Busca tu plato favorito ' 
+        />
+
+
         <FlatList
-// horizontal
-//  style={styles.lista}
-//  horizontal
  data = {this.state.platos}
  showsHorizontalScrollIndicator={false}
  keyExtractor = {this.keyExtractor}

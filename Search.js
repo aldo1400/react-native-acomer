@@ -11,7 +11,7 @@ export default class Search extends Component {
     return (
       <View>
         <SearchBar
-            showLoading
+            showLoading={false}
             platform="android"
             returnKeyType='search'
             onChangeText={(text)=>this.cambiartexto(text)}

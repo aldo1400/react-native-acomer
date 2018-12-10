@@ -16,8 +16,11 @@ const Comment = (props) =>
         <Image style={styles.avatar} source={{ uri: props.avatar }} /> :
         <Image style={styles.avatar} source={{ uri: DEFAULT_AVATAR }} />
     }
-    <Text style={styles.text}>{props.text}{props.email}</Text>
+    <View style={{flexDirection:'column'}}>
+    <Text style={styles.text}>{props.text}</Text>
+    <Text style={styles.text}>{props.email}</Text>
     <Text style={styles.text}>{props.fecha}</Text>
+    </View>
   </View>
 
 const styles = StyleSheet.create({

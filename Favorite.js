@@ -13,6 +13,13 @@ export default class Favorite extends Component {
     }
 
     keyExtractor = (item) => item.id;
+
+    handlePress(item){
+      // const {navigation}=this.props;-
+      const { navigation } = this.props;
+  navigation.navigate('RestaurantBox',{nombre:item.nombre,horario:item.horario,email:item.email,imagen:item.imagen,id:item.id,pagina_web:item.pagina_web});
+    }
+  
 componentDidMount(){
     const { uid,email} = firebase.auth().currentUser;    
     database.ref().child('restaurante').orderByChild('likeCount').on('value', (snap) => {
@@ -41,7 +48,8 @@ componentDidMount(){
                         oferta:child.val().oferta,
                         precio:child.val().precio,
                         imagen:child.val().imagen,
-                        likeCount:child.val().likeCount
+                        likeCount:child.val().likeCount,
+                        imagen_fondo:child.val().imagen_fondo
                       });
                     }
                     else{
@@ -68,14 +76,14 @@ componentDidMount(){
     // const { uid,email} = firebase.auth().currentUser;
     console.log(this.state.favoritos)
     return (
-    //   <View>
+      <View>
         <FlatList
          data = {this.state.favoritos}
          showsHorizontalScrollIndicator={false}
          keyExtractor = {this.keyExtractor}
-         renderItem={({item})=> <Text>{item.nombre}</Text>}
+         renderItem={({item})=> <FavoritosBox item={item} enviar={()=>{this.handlePress(item)}} />}
         />
-    //   </View>
+      </View>
     )
   }
 }
